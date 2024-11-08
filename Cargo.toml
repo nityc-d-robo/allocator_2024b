@@ -1,0 +1,11 @@
+[package]
+name = "director_2024_a"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+safe_drive = "0.4"
+
+
+[package.metadata.ros]
+safe_drive_version = "0.3"
