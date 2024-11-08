@@ -19,7 +19,7 @@ fn main() -> Result<(), DynError> {
     let mut selector = ctx.create_selector()?;
     let node = ctx.create_node("allocator_2024b", None, Default::default())?;
 
-    let c_joy = node.create_subscriber::<sensor_msgs::msg::Joy>("joy0", None)?;
+    let c_joy = node.create_subscriber::<sensor_msgs::msg::Joy>("joy", None)?;
 
     let mut r_joys = RefCell::new((
         [
@@ -45,12 +45,12 @@ fn worker(joy_msg: TakenMsg<Joy>, _robocons: &mut RefCell<([Publisher<Joy>; 2], 
     let mut joy_c = p9n_interface::PlaystationInterface::new(&binding);
     joy_c.set_joy_msg(&joy_msg);
 
-    if joy_c.pressed_dpad_up() {
+    if joy_c.pressed_circle() {
         let robocons = _robocons.get_mut();
         robocons.1 = 0;
     }
 
-    if joy_c.pressed_dpad_down() {
+    if joy_c.pressed_square() {
         let robocons = _robocons.get_mut();
         robocons.1 = 1;
     }

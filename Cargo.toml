@@ -1,5 +1,5 @@
 [package]
-name = "director_2024_a"
+name = "allocator_2024b"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,4 +8,4 @@ safe_drive = "0.4"
 
 
 [package.metadata.ros]
-safe_drive_version = "0.3"
+safe_drive_version = "0.4"
