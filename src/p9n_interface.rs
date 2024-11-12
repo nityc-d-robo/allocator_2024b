@@ -20,9 +20,23 @@ impl<'a> PlaystationInterface<'a> {
     fn is_vaild_axes(&self, axes: usize) -> bool {
         axes < self.msg.buttons.as_slice().len()
     }
-    pub fn pressed_ps(&self) -> bool {
+    pub fn pressed_start(&self) -> bool {
         if self.is_vaild_button(BUTTONS_DUALSENSE::START) {
             self.msg.buttons.as_slice()[BUTTONS_DUALSENSE::START] == 1
+        } else {
+            false
+        }
+    }
+    pub fn pressed_select(&self) -> bool {
+        if self.is_vaild_button(BUTTONS_DUALSENSE::SELECT) {
+            self.msg.buttons.as_slice()[BUTTONS_DUALSENSE::SELECT] == 1
+        } else {
+            false
+        }
+    }
+    pub fn pressed_ps(&self) -> bool {
+        if self.is_vaild_button(BUTTONS_DUALSENSE::PS) {
+            self.msg.buttons.as_slice()[BUTTONS_DUALSENSE::PS] == 1
         } else {
             false
         }

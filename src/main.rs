@@ -18,6 +18,7 @@ fn main() -> Result<(), DynError> {
     let ctx = Context::new()?;
     let mut selector = ctx.create_selector()?;
     let node = ctx.create_node("allocator_2024b", None, Default::default())?;
+    let mut select_button_state = false;
 
     let c_joy = node.create_subscriber::<sensor_msgs::msg::Joy>("joy", None)?;
 
@@ -31,7 +32,7 @@ fn main() -> Result<(), DynError> {
     selector.add_subscriber(
         c_joy,
         Box::new(move |msg| {
-            worker(msg, &mut r_joys);
+            worker(msg, &mut r_joys, &mut select_button_state);
         }),
     );
 
@@ -40,20 +41,27 @@ fn main() -> Result<(), DynError> {
     }
 }
 
-fn worker(joy_msg: TakenMsg<Joy>, _robocons: &mut RefCell<([Publisher<Joy>; 2], usize)>) {
+fn worker(joy_msg: TakenMsg<Joy>, _robocons: &mut RefCell<([Publisher<Joy>; 2], usize)>, select_button_state: &mut bool) {
     let binding = sensor_msgs::msg::Joy::new().unwrap();
     let mut joy_c = p9n_interface::PlaystationInterface::new(&binding);
     joy_c.set_joy_msg(&joy_msg);
 
-    if joy_c.pressed_circle() {
+    if joy_c.pressed_select() && !select_button_state{
+        *select_button_state = true;
+        let robocons = _robocons.get_mut();
+        robocons.1 = if(robocons.1 == 0) {1} else {0};
+    }
+    if !joy_c.pressed_select() && select_button_state{
+        *select_button_state = false;
+    }
+    /*if joy_c.pressed_circle() {
         let robocons = _robocons.get_mut();
         robocons.1 = 0;
     }
-
     if joy_c.pressed_square() {
         let robocons = _robocons.get_mut();
         robocons.1 = 1;
-    }
+    }*/
 
     let pointer = _robocons.borrow().1;
     let unpointer = (pointer + 1) % _robocons.borrow().0.len();
